@@ -8,17 +8,17 @@
 
     <item
         android:id="@+id/somosFragment"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@android:drawable/ic_dialog_info"
         android:title="Quienes Somos" />
 
     <item
         android:id="@+id/ofrecemosFragment"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@android:drawable/ic_menu_help"
         android:title="Que ofrecemos" />
 
     <item
         android:id="@+id/contactoFragment"
-        android:icon="@android:drawable/ic_menu_directions"
+        android:icon="@android:drawable/ic_dialog_email"
         android:title="Contacto" />
 
 </menu>
