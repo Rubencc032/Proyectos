@@ -4,10 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/drawable/ic_launcher_background.xml" value="0.23541666666666666" />
+        <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/drawable/splas_screen.xml" value="0.23177083333333334" />
+        <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/drawable/splash_screen.xml" value="0.18" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/drawer_header.xml" value="0.25" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/fragment_contacto.xml" value="0.12771739130434784" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/fragment_home.xml" value="0.12771739130434784" />
+        <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/fragment_ofrecemos.xml" value="0.19067028985507245" />
+        <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/layout/fragment_somos.xml" value="0.18" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/menu/bottom_menu.xml" value="0.2" />
         <entry key="..\:/Proyectos/005 - ANDROID/P3Navigation/app/src/main/res/menu/drawer_menu.xml" value="0.2" />
       </map>

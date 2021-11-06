@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00bbc4"
+    android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="181dp"
         android:paddingTop="48dp"
-        app:srcCompat="@drawable/monitor" />
+        app:srcCompat="@drawable/computermenu" />
 
     <TextView
         android:layout_width="wrap_content"

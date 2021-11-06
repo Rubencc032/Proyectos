@@ -16,4 +16,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="Theme.MySplashScreen" parent="Theme.P3Navigation">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <!-- Customize your theme here. -->
+    </style>
+
 </resources>

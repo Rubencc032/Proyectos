@@ -22,6 +22,8 @@ public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		
+		System.out.println("Hola");
+		
 		//variables locales
 		//ruta de la BBDD y credencialea para la conexion
 		String url = "jdbc:mariadb://localhost:3306/starwars";
