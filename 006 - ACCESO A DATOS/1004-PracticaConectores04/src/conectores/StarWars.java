@@ -30,8 +30,9 @@ public class StarWars {
 
 		/**
 		 * @param args
+		 * @throws SQLException 
 		 */
-		public static void main(String[] args) {
+		public static void main(String[] args) throws SQLException {
 			
 			//variables locales
 			boolean conectado = false;	//para controlar que estemos conectados a la BBDD
@@ -43,11 +44,14 @@ public class StarWars {
 				//si hay exito en la conexion,  lo indicamos y vamos llamando a las distintas funciones
 				if(conectado) {
 					System.out.println("Se ha conectado correctamente a la BBDD.");
-					//listarPlanetas();
+					//Ejercicio1
+					listarPlanetas();
+					//Ejercicio2
 					insertarPlanetas("Jakku", 31, 13, 1976, "tropical", "1 standard", "grasslands", 40, 4);
 					insertarPersonajes("Rey", 170, 54, "black", "white", "brown", "15DBY", "female","Jakku");
 					insertarPersonajes("Finn", 178, 73,"black","dark","dark","11DBY","male", "Kamino");
 					insertarPersonajes("Kylo Ren", 189, 89,"black","white","brown","5DBY","male", "Chandrila");
+					//Ejercicio3
 					verMuertes();
 				}
 				//control de excepciones en caso de error durante la conexion.
@@ -55,6 +59,9 @@ public class StarWars {
 				System.out.println("No se ha conectado a la BBDD.");
 				e.printStackTrace();
 			}
+			
+			//cerramos la conexion
+			connection.close();
 
 		}
 		
@@ -78,10 +85,14 @@ public class StarWars {
 		 */
 		private static void listarPlanetas() throws SQLException {
 			
+			System.out.println();
+			System.out.println("EJERCICIO 1");
+			System.out.println();
+			
 			//variables locales
 			String sql = "SELECT name FROM planets WHERE diameter between ? AND ?";	//consulta sql
 			
-			//pedimos los valores de los tamaños de los planetas 3 veces
+			//pedimos los valores de los tamaños de los planetas.
 			for(int i = 0; i < 6; i++) {
 				
 				//banner para saber que rango de valores estamos introduciendo
@@ -120,10 +131,18 @@ public class StarWars {
 				
 			}
 			
+			//ceramos el Statement
+			sentencia.close();
 			
 		}
 
 
+		/**
+		 * metodo para validar que un numero sea entero y no menor que 0
+		 * @param string: la cadena que mostramos al pedir el dato
+		 * @param valor:  valor con el que debemos comparar el numero. 
+		 * @return
+		 */
 		private static int pedirNumero(String string, int valor) {
 			
 			//variables locales
@@ -167,6 +186,10 @@ public class StarWars {
 			int LastIDPlanet = 0;			//para almacenar la id del ultimo planeta almacenado en la BBDD
 			String sql = "";				//aqui iremos almacenando las lineaa de consulta y manipulacion de datos
 			
+			System.out.println();
+			System.out.println("EJERCICIO 2");
+			System.out.println();
+			
 			//vamos a recoger el ultimo id de la tabla planetas
 			sql = "SELECT id, name FROM planets;";
 			//preparamos la sentencia
@@ -181,7 +204,7 @@ public class StarWars {
 			}
 			
 			//si el planeta existe, lo mostramos por pantalla y sino, inyectamos la informacion
-			if (existe) System.out.println("El planeta ya existe");
+			if (existe) System.out.println("El planeta " + name + " ya existe");
 			else {
 				//aumentamos en uno la variable LastId... para pasar 
 				LastIDPlanet++;
@@ -241,12 +264,15 @@ public class StarWars {
 				//buscamos el id del planeta del personaje
 				sql = "SELECT id FROM planets where name = ?";
 				
+				sentencia= connection.prepareStatement(sql);
+				sentencia.setString(1, planeta);
+				
 				//cogemos los resultados
 				rs = sentencia.executeQuery();
 				
 		        boolean existePlaneta = false; 						//para comprobar que el planeta no existe
 				while (rs.next()) {
-					if (rs.getString(2).toLowerCase().equals(planeta.toLowerCase())) {
+					if (rs.getInt(1) > 0) {
 						existePlaneta = true;
 						idPlanet = rs.getInt(1);
 					}
@@ -282,6 +308,10 @@ public class StarWars {
 			
 		}
 		
+		/**
+		 * metodo para obtener los muertos y sus verdugos en cada pelicula de Star Wars
+		 * @throws SQLException
+		 */
 		private static void verMuertes() throws SQLException {
 			
 			//primero obtenemos el listado de peliculas
@@ -293,7 +323,7 @@ public class StarWars {
 				sentencia.setInt(1, i);
 				//cogemos los resultados
 				ResultSet rs = sentencia.executeQuery();
-				//mostramos los datos por pantalla
+				//guardamos los datos en el array
 				while (rs.next()) peliculas[i-1] = rs.getString(1) + ". " + rs.getString(2) ;
 			}
 			
@@ -303,6 +333,9 @@ public class StarWars {
 					+ "characters.id = deaths.id_character, characters ch join deaths de on "
 					+ "ch.id = de.id_killer where deaths.id = de.id and deaths.id_film = ?;";
 			
+			System.out.println();
+			System.out.println("EJERCICIO 3");
+			System.out.println();
 		
 			sentencia= connection.prepareStatement(sql);
 			for(int i = 1; i <=9; i++) {
@@ -310,11 +343,13 @@ public class StarWars {
 				//cogemos los resultados
 				ResultSet rs = sentencia.executeQuery();
 				//mostramos los datos por pantalla
-				System.out.println(peliculas[i-1]);
+				System.out.println("************************************");
+				System.out.println(" " + peliculas[i-1]);
+				System.out.println("************************************");
 				//creamos una cadena formateada para mostrar la info en modo columna
-				System.out.printf(" %-21s %-20s\n", "character","killer");
+				System.out.printf(" %-25s %-20s\n","CHARACTER","KILLER");
 				while (rs.next()) 
-					System.out.printf(" %-20s  %-20s  \n", rs.getString(1), rs.getString(2));
+					System.out.printf(" %-24s  %-20s  \n", rs.getString(1), rs.getString(2));
 			}
 		   
 		
