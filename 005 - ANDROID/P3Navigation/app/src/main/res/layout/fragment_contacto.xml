@@ -27,7 +27,7 @@
             android:src="@drawable/correo" />
 
         <TextView
-            android:id="@+id/tvofr5"
+            android:id="@+id/tvmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -47,7 +47,7 @@
             android:layout_gravity="center"/>
 
         <TextView
-            android:id="@+id/tvofr6"
+            android:id="@+id/tvlink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -66,8 +66,23 @@
             android:id="@+id/ivGitHub"
             android:layout_width="116dp"
             android:layout_height="107dp"
-            android:src="@drawable/github"
+            android:src="@drawable/githublogo"
             android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvgitHub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="100dp"
+            android:fontFamily="@font/cherry_cream_soda"
+            android:text="Coming up next..."
+            android:textSize="16sp"
+            android:layout_gravity="center" />
+
+
 
 
     </LinearLayout>
