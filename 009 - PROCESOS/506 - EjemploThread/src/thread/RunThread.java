@@ -4,8 +4,13 @@ public class RunThread {
 
 	public static void main(String[] args) {
 		
-		HelloThread hilo = new HelloThread(); //se crea un nuevo hilo de ejecucion
-		hilo.start();						  //se arranca el hilo creado anteriormente
+		//se crea un nuevo hilo de ejecucion
+		HelloThread hilo = new HelloThread();
+		
+		//se arranca el hilo creado anteriormente
+		hilo.start();
+		
+		//mostramos datos por pantalla para mostrar donde estamos
 		System.out.println("Hola desde el hilo principal");
 		System.out.println("Proceso acabando");
 		

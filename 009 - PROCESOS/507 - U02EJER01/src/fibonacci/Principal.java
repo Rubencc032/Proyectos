@@ -9,7 +9,9 @@ public class Principal {
 		//pedimos un numero entero
 		int numero = pedirNumero();
 		
+		Fibonacci fibo = new Fibonacci(numero);
 		
+		fibo.start();
 
 	}
 
@@ -34,9 +36,9 @@ public class Principal {
 				System.out.println("el dato introducido no es correcto");
 			}
 			//si el numero es entero, comprobamos que no sea menor que 0
-			if(salir && numero < 0) {
+			if(salir && numero <= 0) {
 				salir=false;
-				System.out.println("el numero no puede ser negativo");
+				System.out.println("el numero no puede ser negativo o 0");
 			}
 		}
 		
