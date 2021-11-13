@@ -93,7 +93,7 @@ public class Migracion {
 				cadena = cadena + " ) ";
 				
 				//cogemos las foreign keys
-				foreignKeys = dbmd.getExportedKeys(catalogo, esquema, tabla);
+				foreignKeys = dbmd.getImportedKeys(catalogo, esquema, tabla);
 				
 				while(foreignKeys.next()) {
 					
@@ -105,10 +105,10 @@ public class Migracion {
 		            System.out.println(primaryKeyColumnName + " " + primaryKeyTableName + " "+ " " + foreignKeyTableName +" " + foreignKeyColumnName);
 		            
 		            if (primaryKeyColumnName.length() > 0) cadena = cadena + ", CONSTRAINT FK_" + foreignKeyTableName + 
-		            		" FOREIGN KEY (" + foreignKeyColumnName + ") REFERENCES " + foreignKeyTableName + "(" + primaryKeyColumnName + ")";
+		            		" FOREIGN KEY (" + foreignKeyColumnName + ") REFERENCES " + primaryKeyTableName + "(" + primaryKeyColumnName + ")";
 				}
 				
-				
+				cadena = cadena + ");";
 				System.out.println(cadena);
 			}
 		} catch (SQLException e) {

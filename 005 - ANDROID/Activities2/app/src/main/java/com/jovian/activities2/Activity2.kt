@@ -3,6 +3,7 @@ package com.jovian.activities2
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.jovian.activities2.databinding.Activity2Binding
 
 class Activity2 : AppCompatActivity() {
@@ -38,6 +39,7 @@ class Activity2 : AppCompatActivity() {
         binding.btnReturn.setOnClickListener{
 
             val text = binding.etName.text.toString()
+            Log.i("valor", "$text")
             val returnIntent = Intent().apply {
                 putExtra(KEY_EXTRA_RESULT, text)
             } //creates a new Intent with editText content as extra
