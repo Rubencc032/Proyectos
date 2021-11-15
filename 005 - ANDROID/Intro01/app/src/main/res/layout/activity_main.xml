@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
     android:orientation="vertical"
-    android:background="@color/purple_200"
+    android:background="@color/md_purple_100"
     tools:context=".MainActivity">
 
     <TextView
