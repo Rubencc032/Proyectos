@@ -16,16 +16,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //le ponemos el listener al boton y llamamos a la funcion
-        binding.btnGo.setOnClickListener() { openActivity2()}
     }
 
-    //funcion para llamar a la siguiente actividad
-    private fun openActivity2() {
-
-        //creamos el intent para poder ir a la otra actividad
-        //le pasamos el contexto y que actividad llamamos
-        val intent = Intent(this, Activity2::class.java)
-        startActivity(intent)
+    override fun onResume() {
+        super.onResume()
+        //ponemos el listener al boton y volvemos a la MainActivity
+        binding.btnGo.setOnClickListener() {
+            val intent = Intent(this, Activity2::class.java)
+            startActivity(intent)
+        }
     }
+
 }

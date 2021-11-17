@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.jovian.activities.databinding.Activity2Binding
-import com.jovian.activities.databinding.ActivityMainBinding
 
 class Activity2 : AppCompatActivity() {
 
@@ -16,10 +15,17 @@ class Activity2 : AppCompatActivity() {
         binding = Activity2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         //ponemos el listener al boton y volvemos a la MainActivity
         binding.btnReturn.setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            //si queremos sacar la activity de la pila
+            finish()
+            //se mantiene la activity en la pila
+            //val intent = Intent(this, MainActivity::class.java)
+            //startActivity(intent)
         }
     }
 }
