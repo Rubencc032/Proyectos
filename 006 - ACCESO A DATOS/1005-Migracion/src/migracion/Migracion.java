@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -23,7 +24,9 @@ import java.util.ArrayList;
 public class Migracion {
 	
 	//variables globales
-	private static Connection connection = null;			//para la conexion a la BBDD
+	
+	//para la conexion a la BBDD
+	private static Connection connection = null;			
 	//creamos un arrayList donde vamos a cosntruir los inserts que vamos a utilizar en el ejercicio2
 	private static ArrayList<String> createTables = new ArrayList<String>();
 	//creamos un arrayList donde guardaremos los nombres de las tablas
@@ -37,22 +40,24 @@ public class Migracion {
 		
 		ejercicio1(); 									   //llamada al metodo para iniciar el primer ejercicio
 		ejercicio2();									   //llamada al metodo para iniciar el segundo ejercicio
+		ejercicio3();									   //llamada al metodo para iniciar el tercer ejercicio
 
 	}
 
-	
+
 	private static void ejercicio1() throws SQLException {
 		
 		//variables locales
-		//en esta variable vamos a constrir los createTables cogiendo metadatos de veterinaria.db
-		String cadena = "";
-		String tabla = "";
-		String catalogo = "";
-		String esquema = "";
-		ResultSet resul;
-		ResultSet columnas;
-		ResultSet primaryKeys;
-		ResultSet foreignKeys;
+		
+		
+		String cadena = "";							//en esta variable vamos a construir los createTables cogiendo metadatos de veterinaria.db
+		String tabla = "";							//almacena el nombre de la tabla
+		String catalogo = "";						//almacena el nombre del catalago. Util para primary keys
+		String esquema = "";						//almacena el nombre del esquema. Util para primary keys
+		ResultSet resul;							//para la lectura de metadatos
+		ResultSet columnas;							//para coger metadatos de las columnas
+		ResultSet primaryKeys;						//para coger metadatos de las claves primarias
+		ResultSet foreignKeys;						//para coger metadatos de las claves ajenas
 		int contador;
 		
 		
@@ -131,6 +136,8 @@ public class Migracion {
 			System.out.println("No se ha podido realizar la conexion a veterinaria"); 
 		}
 		
+		//cerramos la conexion
+		connection.close();
 	}
 	
 	
@@ -141,8 +148,9 @@ public class Migracion {
 		String url = "jdbc:mariadb://localhost:3306/";
 		String user = "star";
 		String password = "wars";
+		
+		//preparedStatement para poder realizar 
 		PreparedStatement sentencia;
-		int rs = 0;
 		boolean borrar = true;
 		
 		//intentamos la conexion
@@ -150,7 +158,7 @@ public class Migracion {
 			connection = DriverManager.getConnection(url, user, password);
 			//si la conexion es correcta, lo indicamos y seguimos con el ejercicio
 			if(connection != null){
-				//connection.setAutoCommit(false);
+				connection.setAutoCommit(false);
 				System.out.println("Conexion con la BBDD MariaDB realizada con exito.");
 				//vemos si hay elementos en el arrayList de storeTables y empezamos con la inyeccion de datos
 				if(storeTables.size() > 0) {
@@ -173,10 +181,13 @@ public class Migracion {
 					sentencia= connection.prepareStatement("use veterinaria");
 					sentencia.executeUpdate();
 					
-					//TODO ver la manera de optimizar esto
-					//en este caso se que necesito implementar primero el segungo item del arraylist
-					//porque el primer item tiene una primayKey que hace referencia a la otra tabla, y da error
-					//buscar solucion para automatizar esto
+					//TODO esta parte esta pendiente de una revision y analisis con mas tranquilidad
+					//es probable que al almacenar los create tables, estos se hagan en orden alfabetico de las tablas
+					//y no en el orden en el que fueron creadas.
+					//Problema, que al crear tablas en orden alfabetico, seguramente habra tablas con foreign keys que no esten creadas
+					//y dará error al crearlas, por falta de referencias.
+					//Como solucion temporal, voy leyendo el arraylist createTables, eliminando las lineas que son creadas, y las que de error
+					//las dejo hasta que se puedan construir. Es decir leo en bucle el arraylist hasta que no queden tablas que crear.
 					while(createTables.size() > 0){
 						for(int i = 0; i < createTables.size(); i++) {
 							
@@ -195,7 +206,7 @@ public class Migracion {
 							System.out.println(createTables.get(i).toString());
 			                try {
 			                	 sentencia= connection.prepareStatement(createTables.get(i).toString());
-			                	 rs = sentencia.executeUpdate();
+			                	 sentencia.executeUpdate();
 			                }catch (SQLException e) {
 			                	System.out.println(e);
 			                	borrar = false;
@@ -206,8 +217,11 @@ public class Migracion {
 							
 						}
 					}
+				
+			     //hemos finalizado la inyeccion de tablas. Mandamos un commit
 				 connection.commit();
 				 
+				 //activamos el autocommit
 				 connection.setAutoCommit(true);
 					
 				}
@@ -217,7 +231,156 @@ public class Migracion {
 		} catch (Exception e) {
 			System.out.println("Conexion erronea");
 		}
+		
+		//cerramos la conexion
+		connection.close();
+	}
+	
+	private static void ejercicio3() throws SQLException {
+		
+		//variables locales
+		String cadena; 											//para generar los insert
+		String tabla;											//almacena el nombre de la tabla
+		ArrayList<String> inserts = new ArrayList<String>();      //almacena las cadenas con los inserts
+		ArrayList<String> tipoDatos = new ArrayList<String>();    //almacena los tipos de dato de cada columna
+		String subCadena = null;
+		//ruta de la BBDD de mariaDB y credencialea para la conexion
+		String url = "jdbc:mariadb://localhost:3306/veterinaria";
+		String user = "star";
+		String password = "wars";
+		
+		//intentamos la conexion a la BBDD veterinaria.db
+				try {
+					connection = DriverManager.getConnection("jdbc:sqlite:veterinaria.db");
+					if (connection != null) System.out.println("Conectado a veterinaria");
+					
+					//obtenemos los metadatos de la BBDD veterinaria
+					DatabaseMetaData dbmd = connection.getMetaData();
+					
+					//cogemos los metadatos de la tabla
+					ResultSet resul = dbmd.getTables(null, "veterinaria.db",null , null);
+				    
+					//mientras haya datos, vamos leyendo. 
+					while(resul.next()) {
+						//cogemos metadatos de la tabla. Cogemos el nombre de la tabla y lo almacenamos en la cadena.
+						cadena = "INSERT INTO ";
+						tabla = resul.getString("TABLE_NAME");
+						cadena = cadena + resul.getString("TABLE_NAME") + " ( ";
+						
+						//cogemos metadatos de la columna para siguiendo con la construccion de la cadena
+						ResultSet columnas = dbmd.getColumns(null, "veterinaria.db", tabla, null);
+						
+						//como en sqlite no hay un metodo para acceder al numero de registros obtenidos
+						//corremos el resulset contando el numero de registros
+						//lo hacemos porque debemos saber cuando debemos poner coma o no al construir los insert
+						int totalRegistros = 0;
+						while (columnas.next()) {
+							totalRegistros++;
+						}
+						
+						//volvemos a construir columnas, ya que no podemos usar metodos como first(), last() con sqlite
+						columnas = dbmd.getColumns(null, "veterinaria.db", tabla, null);
+						
+						//para contar los registros que leemos y vemos que no es el ultimo para poner una coma
+						int contador = 1;
+						
+						//mientras haya datos vamos leyendo y construyendo la tabla
+						while(columnas.next()) {
+							cadena = cadena + " " + columnas.getString("COLUMN_NAME");
+							tipoDatos.add(columnas.getString("TYPE_NAME"));
+							System.out.println(columnas.getString("TYPE_NAME"));
+							if(contador != totalRegistros) cadena = cadena + " , ";
+							contador++;
+					
+						}
+						
+						//cerramos la linea de las tablas
+						cadena = cadena + ") VALUES ( ";
+						
+						//ahora debemos obtener los registros de la tabla
+						//creamos el statement para poder realizar la consulta
+						Statement sentencia = connection.createStatement();
+						
+						//lanzamos la consulta
+						ResultSet consulta = sentencia.executeQuery("Select * from " + tabla);
+						
+						//TODO Revisar esto para automatizar la construccion. Hay que coger los tipos de cada columna 
+						//En funcion del tipo de dato de la columna, construimos la cadena
+						//He cogido los tres tipos de datos que se utilzaron al construir la BBDD en sqlite
+						while(consulta.next()) {
+							subCadena = cadena;
+							for(int i = 1; i <= totalRegistros; i++) {
+								if (tipoDatos.get(i-1).equals("INTEGER")) subCadena = subCadena + consulta.getInt(i);
+								else if (tipoDatos.get(i-1).equals("DATE")) subCadena = subCadena + "STR_TO_DATE";//('" + consulta.getDate(i) + "','%Y-%m-%d')"; 
+								else subCadena = subCadena + "\"" + consulta.getString(i) + "\"";
+								if(i < totalRegistros) subCadena = subCadena + (",");
+							}
+						}
+					    subCadena = subCadena + ");";
+					    System.out.println(subCadena);
+					    inserts.add(subCadena);
+						
+					}
+				
+					//si ha fallado la conexion a la BBDD, lo indic
+				} catch (SQLException e) {
+					e.printStackTrace();
+					System.out.println("No se ha podido realizar la conexion a veterinaria"); 
+				}
+				
+				//cerramos la conexion
+				connection.close();
+				
+				/**hora debemos insertar las filas en MariaDB
+				
+				
+				//preparedStatement para poder realizar las ordenes
+				PreparedStatement sentencia;
+				boolean borrar = true;
+				
+				//intentamos la conexion
+				try {
+					connection = DriverManager.getConnection(url, user, password);
+					//si la conexion es correcta, lo indicamos y seguimos con el ejercicio
+					if(connection != null){
+						connection.setAutoCommit(false);
+						System.out.println("Conexion con la BBDD MariaDB realizada con exito.");
+						
+						//corremos el arrayList de inserts
+						//las lineas correctas las borramos y las que den error las mantenemos y las volvemos a leer
+						while(inserts.size() > 0) {
+							for(int i = 0; i < inserts.size(); i++) {
+								sentencia= connection.prepareStatement(inserts.get(i));
+								System.out.println(inserts.get(i));
+								try {
+									sentencia.executeUpdate();
+								} catch (SQLException e) {
+				                	System.out.println(e);
+				                	borrar = false;
+								}
+				                if (borrar == true)inserts.remove(i);
+				                else borrar = true;
+								}
+								connection.commit();
+							}
+						}
+						
+					
+						 //activamos el autocommit
+						 connection.setAutoCommit(true);
+							
+					
+				//la conexion no es correcta, lo indicamos
+				} catch (Exception e) {
+					System.out.println("Conexion erronea");
+				}**/
+				
+				//cerramos la conexion
+				connection.close();
+			}
+			
 	}
 
 
-}
+	
+
