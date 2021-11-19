@@ -288,7 +288,6 @@ public class Migracion {
 						while(columnas.next()) {
 							cadena = cadena + " " + columnas.getString("COLUMN_NAME");
 							tipoDatos.add(columnas.getString("TYPE_NAME"));
-							System.out.println(columnas.getString("TYPE_NAME"));
 							if(contador != totalRegistros) cadena = cadena + " , ";
 							contador++;
 					
@@ -311,12 +310,13 @@ public class Migracion {
 							subCadena = cadena;
 							for(int i = 1; i <= totalRegistros; i++) {
 								if (tipoDatos.get(i-1).equals("INTEGER")) subCadena = subCadena + consulta.getInt(i);
-								else if (tipoDatos.get(i-1).equals("DATE")) subCadena = subCadena + "STR_TO_DATE";//('" + consulta.getDate(i) + "','%Y-%m-%d')"; 
+								else if (tipoDatos.get(i-1).equals("DATE")) subCadena = subCadena + "STR_TO_DATE('" + consulta.getString(i) + "','%Y-%m-%d')"; 
 								else subCadena = subCadena + "\"" + consulta.getString(i) + "\"";
 								if(i < totalRegistros) subCadena = subCadena + (",");
 							}
 						}
 					    subCadena = subCadena + ");";
+					    tipoDatos.clear();
 					    System.out.println(subCadena);
 					    inserts.add(subCadena);
 						
@@ -331,7 +331,7 @@ public class Migracion {
 				//cerramos la conexion
 				connection.close();
 				
-				/**hora debemos insertar las filas en MariaDB
+				//Ahora debemos insertar las filas en MariaDB
 				
 				
 				//preparedStatement para poder realizar las ordenes
@@ -373,7 +373,7 @@ public class Migracion {
 				//la conexion no es correcta, lo indicamos
 				} catch (Exception e) {
 					System.out.println("Conexion erronea");
-				}**/
+				}
 				
 				//cerramos la conexion
 				connection.close();
