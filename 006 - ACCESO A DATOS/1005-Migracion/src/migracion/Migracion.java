@@ -332,7 +332,6 @@ public class Migracion {
 								if(i < totalRegistros) subCadena = subCadena + (",");
 							}
 							subCadena = subCadena + ");";
-						    System.out.println(subCadena);
 						    inserts.add(subCadena);
 						}
 						tipoDatos.clear();
