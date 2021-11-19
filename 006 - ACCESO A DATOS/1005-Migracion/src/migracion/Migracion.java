@@ -60,6 +60,11 @@ public class Migracion {
 		ResultSet foreignKeys;						//para coger metadatos de las claves ajenas
 		int contador;
 		
+		System.out.println();
+		System.out.println("****************");
+		System.out.println("**EJERCICIO 01**");
+		System.out.println("****************");
+		System.out.println();
 		
 		//intentamos la conexion a la BBDD veterinaria.db
 		try {
@@ -152,6 +157,12 @@ public class Migracion {
 		//preparedStatement para poder realizar 
 		PreparedStatement sentencia;
 		boolean borrar = true;
+		
+		System.out.println();
+		System.out.println("****************");
+		System.out.println("**EJERCICIO 02**");
+		System.out.println("****************");
+		System.out.println();
 		
 		//intentamos la conexion
 		try {
@@ -249,6 +260,12 @@ public class Migracion {
 		String user = "star";
 		String password = "wars";
 		
+		System.out.println();
+		System.out.println("****************");
+		System.out.println("**EJERCICIO 03**");
+		System.out.println("****************");
+		System.out.println();
+		
 		//intentamos la conexion a la BBDD veterinaria.db
 				try {
 					connection = DriverManager.getConnection("jdbc:sqlite:veterinaria.db");
@@ -314,11 +331,11 @@ public class Migracion {
 								else subCadena = subCadena + "\"" + consulta.getString(i) + "\"";
 								if(i < totalRegistros) subCadena = subCadena + (",");
 							}
+							subCadena = subCadena + ");";
+						    System.out.println(subCadena);
+						    inserts.add(subCadena);
 						}
-					    subCadena = subCadena + ");";
-					    tipoDatos.clear();
-					    System.out.println(subCadena);
-					    inserts.add(subCadena);
+						tipoDatos.clear();
 						
 					}
 				
