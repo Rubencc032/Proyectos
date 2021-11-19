@@ -5,7 +5,9 @@ public class RunnableClass implements Runnable {
 	@Override
 	public void run() {
 		
-		System.out.println(Thread.currentThread().getName() + " en ejecucion.");
+		System.out.println(Thread.currentThread().getName() + " empezando.");
+		
+		System.out.println(Thread.currentThread().getName() + " finalizado.");
 		
 	}
 

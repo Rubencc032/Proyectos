@@ -27,13 +27,6 @@ public class PideHilos {
 		//iniciamos los hilos
 		for(int i = 0; i < hilos.size(); i++) {
 			hilos.get(i).start();
-			System.out.println("Iniciando el " + hilos.get(i).getName());
-		}
-		
-		//Paramos los hilos
-		for(int i = 0; i < hilos.size(); i++) {
-			hilos.get(i).interrupt();				//metodo stop deprecated
-			System.out.println("Parando el " + hilos.get(i).getName());
 		}
 		
 	}
