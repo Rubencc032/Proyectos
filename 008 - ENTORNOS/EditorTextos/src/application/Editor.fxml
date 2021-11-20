@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EditorController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EditorController">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="1000.0">
         <menus>
@@ -51,7 +51,7 @@
             <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#salirPrograma" prefHeight="25.0" prefWidth="28.0" style="-fx-background-image: url('file:salir.png'); -fx-background-repeat: no-repeat; -fx-background-position:center; " />
         </items>
       </ToolBar>
-      <TextArea fx:id="taTexto" layoutX="15.0" layoutY="78.0" prefHeight="497.0" prefWidth="968.0" />
+      <TextArea fx:id="taTexto" layoutX="15.0" layoutY="78.0" onMouseReleased="#cogerTexto" prefHeight="497.0" prefWidth="968.0" />
       <HBox layoutX="10.0" layoutY="568.0" prefHeight="38.0" prefWidth="980.0">
          <children>
             <ImageView fx:id="ivSalvable" fitHeight="28.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true" visible="false">

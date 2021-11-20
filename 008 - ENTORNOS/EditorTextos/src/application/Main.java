@@ -17,7 +17,7 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Notepad Jorge Victoria Andreu");
-			primaryStage.getIcons().add(new Image("C:\\Proyectos\\008 - ENTORNOS\\EditorTextos\\src\\application\\notepad.jpg"));
+			primaryStage.getIcons().add(new Image("file:notepad.jpg"));
 			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch(Exception e) {

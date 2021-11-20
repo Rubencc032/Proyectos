@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -75,6 +77,29 @@ public class EditorController implements Initializable {
 	
 	@FXML
 	private Label lbNombreArchivo;
+	
+	@FXML
+	private Button btnNuevo;
+	
+	@FXML
+	private Button btnAbrir;
+	
+	@FXML
+	private Button btnGuardar;
+	
+	@FXML
+	private Button btnCortar;
+	
+	@FXML
+	private Button btnCopiar;
+	
+	@FXML
+	private Button btnPegar;
+	
+	@FXML
+	private Button btnSalir;
+	
+	
 	
 	//con este metodo controlamos los cambios en el text area comparando el texto original con los cambios
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -333,6 +358,16 @@ public class EditorController implements Initializable {
 					} 
 				}
 				
+	}
+	
+	@FXML
+	void cogerTexto (MouseEvent event) {
+		
+		System.out.println("hola");
+		if(taTexto.getSelectedText().length() > 0) {
+			btnCopiar.setDisable(false);
+			
+		}
 	}
 	
 	
