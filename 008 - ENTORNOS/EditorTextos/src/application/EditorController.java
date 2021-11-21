@@ -297,6 +297,23 @@ public class EditorController implements Initializable {
 		
 	}
 	
+	@FXML
+	void cogerTexto (MouseEvent event) {
+		
+	
+		if(taTexto.getSelectedText().length() > 0) {
+			btnCopiar.setDisable(false);
+			btnCortar.setDisable(false);
+			Copiar.setDisable(false);
+			Cortar.setDisable(false);
+		} else {
+			btnCopiar.setDisable(true);
+			btnCortar.setDisable(true);
+			Copiar.setDisable(true);
+			Cortar.setDisable(true);
+		}
+	}
+	
 	private void guardarFicheros() {
 		
 		//si el fichero no es nulo
@@ -360,15 +377,7 @@ public class EditorController implements Initializable {
 				
 	}
 	
-	@FXML
-	void cogerTexto (MouseEvent event) {
-		
-		System.out.println("hola");
-		if(taTexto.getSelectedText().length() > 0) {
-			btnCopiar.setDisable(false);
-			
-		}
-	}
+	
 	
 	
 	
