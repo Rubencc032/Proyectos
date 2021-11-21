@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EditorController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EditorController">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="1000.0">
         <menus>
@@ -36,7 +36,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Ayuda">
             <items>
-              <MenuItem fx:id="AcercaDe" mnemonicParsing="false" onAction="#mostrarInfo" text="Acerca de" />
+              <MenuItem fx:id="AcercaDe" mnemonicParsing="false" onAction="#mostrarInfo" style="-fx-graphic: url('file:help.png');" text="Acerca de" />
             </items>
           </Menu>
         </menus>

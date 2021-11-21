@@ -41,7 +41,7 @@ public class EditorController implements Initializable {
 	Clipboard systemClipboard = Clipboard.getSystemClipboard(); //portapapeles de javafx
 	ClipboardContent content = new ClipboardContent();			//para copiar texto al portapapeles
 	
-	
+	//variables de los elementos del Scene
 	@FXML
 	private MenuItem miNuevo;
 	
@@ -99,32 +99,41 @@ public class EditorController implements Initializable {
 	@FXML
 	private Button btnSalir;
 	
-	
-	
-	//con este metodo controlamos los cambios en el text area comparando el texto original con los cambios
-	public void initialize(URL url, ResourceBundle resourceBundle) {
-        taTexto.textProperty().addListener(new ChangeListener<String>() {
+	/**
+	 * con este metodo controlamos los cambios en el text area comparando el texto original con los cambios
+	 */
+		public void initialize(URL url, ResourceBundle resourceBundle) {
+	        taTexto.textProperty().addListener(new ChangeListener<String>() {
 
-			@Override
-			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-				
-				//si cambiamos el texto, mostramos el diskette e indicamos que el documento es salvable
-				ivSalvable.setVisible(true);
-				salvable = true;
-				
-				//si no hay cambios, quitamos el diskette e indicamos que el documento no es salvable (porque no hay cambios)
-				if(textoInicial.equals(arg2)) {
-					ivSalvable.setVisible(false);
-					salvable = false;
+				@Override
+				public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+					
+					//si cambiamos el texto, mostramos el diskette e indicamos que el documento es salvable
+					ivSalvable.setVisible(true);
+					salvable = true;
+					
+					//si no hay cambios, quitamos el diskette e indicamos que el documento no es salvable (porque no hay cambios)
+					if(textoInicial.equals(arg2)) {
+						ivSalvable.setVisible(false);
+						salvable = false;
+					}
+					
 				}
-				
-			}
-        });
-    }
+	        });
+	    }
 	
+	
+	//funciones de los distintos eventos de los elementos del scene
+	
+	/**
+	 * metodo para crear nuevos documentos
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void crearDocumento(ActionEvent event) {
 		
+		//mostramos una alerta para guardar el documento abierto, en caso necesario
 		mostrarAlert(event);
 		
 		//limpiamos el area del texto
@@ -142,16 +151,21 @@ public class EditorController implements Initializable {
 		//ponemos el indicador de salvado a false y el documento en salvable, porque es nuevo y ocultamos el diskette
 		salvado = false;
 		ivSalvable.setVisible(false);
-		//salvable = true;
+		salvable = true;
 		
 	}
 	
+	/**
+	 * metodo para abrir documentos
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void abrirDocumento(ActionEvent event) {
 		
 		
 		 fileChooser = new FileChooser();
-	     fileChooser.setTitle("Buscar Documento");
+	     fileChooser.setTitle("Abrir Documento");
 
 	        // Agregar filtros para facilitar la busqueda
 	        fileChooser.getExtensionFilters().addAll( new FileChooser.ExtensionFilter("archivos TXT (.txt)", "*txt*"));
@@ -199,7 +213,7 @@ public class EditorController implements Initializable {
 				//ponemos el nombre del fichero en el label inferior
 				lbNombreArchivo.setText(file.getName().toString());
 				
-				//ocultamos el diskette
+				//ocultamos el diskette y ponemos el documento como salvado y no salvable(nuevo, no hay cambios)
 				salvado = true;
 				ivSalvable.setVisible(false);
 				salvable = false;
@@ -208,14 +222,25 @@ public class EditorController implements Initializable {
 	        
 	}
 	
+	/**
+	 * metodo para guardar nuevos documentos
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void guardarDocumento(ActionEvent event) {
 		
 		//si el fichero no ha sido guardado todavia, llamamos al metodo guardarDocumentoComo
 		if(!salvado) guardarDocumentoComo(event);
+		//si ha sido guardado con anterioridad, vamos directos al metodo para guardar ficheros
 		else guardarFicheros();
 	}
 	
+	/**
+	 * metodo para guardar documentos
+	 * asociado al menu y correspondiente
+	 * @param event
+	 */
 	@FXML
 	void guardarDocumentoComo(ActionEvent event) {
 		
@@ -231,24 +256,39 @@ public class EditorController implements Initializable {
 	    //puede ocurrir que el fichero se guarde sin extension. se la añadimos
 	    if(!file.getName().contains(".")) file = new File(file.toString() + ".txt");
 	        
-	    //llamamos al metodo guardaricheros
+	    //llamamos al metodo guardarFicheros
 	    guardarFicheros();
 	    
 	}
 	
+	/**
+	 * metodo para salir del programa
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void salirPrograma(ActionEvent event) {
 		
+		//comprobamos si el usuario quiere  guardar el documento
 		mostrarAlert(event);
 		
+		//salimos del programa
 		System.exit(0);
 		
 	}
 	
+	/**
+	 * metodo para copiar texto
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void copiarTexto(ActionEvent event) {
 		
+		//guardamos en una cadena  el texto seleccionado
 		String copia = taTexto.getSelectedText();
+		
+		//si la copia tiene mas de 0 caracteres, pasamos la copia al Clipboard.
 		if(copia.length() > 0) {
 			content.putString(copia);
 			systemClipboard.setContent(content);
@@ -257,50 +297,90 @@ public class EditorController implements Initializable {
 		
 	}
 	
+	/**
+	 * metodo para pegar texto
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	@FXML
 	void pegarTexto(ActionEvent event) {
 		
+		  //cogemos el rango de posiciones del texto seleccionado
 		  IndexRange range = taTexto.getSelection();
+		  
+		  //cogemos el texto completo
 		  String origText = taTexto.getText();
+		  
+		  //debemos crear 2 subcadenas, con el texto anterior a la seleccion y el texto posterior a la seleccion
 		  String firstPart = taTexto.getText().substring( 0, range.getStart() );
 		  String lastPart = taTexto.getText().substring( range.getEnd(), origText.length() );
+		  
+		  //una vez creada la cadena, unimos la primera parte con el texto del clipbard y la segunda parte
 		  taTexto.setText( firstPart + systemClipboard.getString() + lastPart );
 		  
+		  //dejamos el cursor en la posicion  donde estabamos
 		  taTexto.positionCaret( range.getStart() );
 		
 		
 	}
+	
+	/**
+	 * metodo para cortar texto
+	 * asociado al menu y boton correspondientes
+	 * @param event
+	 */
 	
 	@FXML
 	void cortarTexto(ActionEvent event) {
 		
 		  
-
+		  //almacenamos el texto seleccionado
 		  String text = taTexto.getSelectedText();
 		  
+		  //copiamos la seleccion en el clipboard
 		  content.putString(text);
 		  systemClipboard.setContent(content);
 		  
+		  //cogemos el rango de posiciones de la seleccion
 		  IndexRange range = taTexto.getSelection();
+		  
+		  //cogemos el texto original
 		  String origText = taTexto.getText();
+		  
+		  //cogemos la parte anterior a la seleccion y la posterior
 		  String firstPart = taTexto.getText().substring( 0, range.getStart() );
 		  String lastPart = taTexto.getText().substring( range.getEnd(), origText.length() );
+		  
+		  //rellenamos en el text area con las 2 subcadenas creadas y ya no aparece el texto seleccionado
 		  taTexto.setText( firstPart + lastPart );
 		  
+		  //ponemos el cursos donde estaba
 		  taTexto.positionCaret( range.getStart() );
-		
 		
 	}
 	
+	/**
+	 * metodo para el menititem acerca de. Solo muestra informacion de la aplicacion
+	 * @param event
+	 */
 	@FXML
 	void mostrarInfo(ActionEvent event) {
 		
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Notepad");
+		alert.setHeaderText("Notepad Version: v1 nov2021");
+		alert.setContentText("Autor: Jorge Victoria Andreu");
+		alert.show();
+		
 	}
 	
+	/**
+	 * Con este metodo controlamos que cuando seleccionemos texto, se activen los botones y los menuItem de cortar y copiar
+	 * @param event
+	 */
 	@FXML
 	void cogerTexto (MouseEvent event) {
 		
-	
 		if(taTexto.getSelectedText().length() > 0) {
 			btnCopiar.setDisable(false);
 			btnCortar.setDisable(false);
@@ -314,6 +394,9 @@ public class EditorController implements Initializable {
 		}
 	}
 	
+	/**
+	 * metodo para guardar ficheros
+	 */
 	private void guardarFicheros() {
 		
 		//si el fichero no es nulo
@@ -331,8 +414,9 @@ public class EditorController implements Initializable {
 			fw = new FileWriter(file, false);	//false porque vamos a sobreescribir el documento
 		    bw = new BufferedWriter(fw);
 		    
-		    //cogemos el texto del area de texto
+		    //cogemos el texto del area de texto. Ademas creamos una copia
 			String st = taTexto.getText();
+			textoInicial = st;
 			
 			//volcamos la informacion
 			bw.write(st, 0, st.length());
@@ -357,9 +441,13 @@ public class EditorController implements Initializable {
 	    }
 	}
 	
+	/**
+	 * metodo para mostrar un alert por si el usuario quiere guardar el documento
+	 * @param event
+	 */
 	private void mostrarAlert(ActionEvent event) {
 		
-		//primero debemos guardar el fichero si no ha sido guardado o ha sido modificado
+		//debemos guardar el fichero si no ha sido guardado o ha sido modificado
 				if(!salvado || salvable) {
 					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 					alert.setHeaderText(null);
